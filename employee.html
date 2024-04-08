@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Company Employees</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+  <header class="bg-dark text-light text-center py-3">
+    <h1>List of Employees</h1>
+  </header>
+
+  <section class="container mt-4">
+    <div>
+      <label for="departmentFilter">Filter by Department:</label><br>
+      <select id="departmentFilter" class="w-50 form-control" style="appearance: auto">
+        <option value="allDepartments">All Departments</option>
+        <option value="IT">IT</option>
+        <option value="Design">Design</option>
+        <option value="Management">Management</option>
+      </select>
+    </div>
+    <h2 class="mt-3">Add Employee</h2>
+    <form>
+      <div class="mb-3">
+        <label for="employeeName">Name:</label><br>
+        <input type="text" id="employeeName" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label for="employeeTitle">Title:</label><br>
+        <input type="text" id="employeeTitle" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label for="employeeDepartment">Department:</label><br>
+        <select id="employeeDepartment" class="form-control" style="appearance: auto">
+          <option value="IT">IT</option>
+          <option value="Design">Design</option>
+          <option value="Management">Management</option>
+        </select>
+      </div>
+      <button type="button" id="addEmployeeButton" class="btn btn-primary mb-3">Add Employee</button>
+    </form>
+  </section>
+
+  <section class="container mt-4">
+    <div id="employeeList"></div>
+  </section>
+
+  <script>
+    const employees = [
+      {id: "1", name: "John Doe", title: "Software Developer", department: "IT"},
+      {id: "2", name: "Jane Smith", title: "Designer", department: "Design"},
+      {id: "3", name: "Bob Johnson", title: "Project Manager", department: "Management"}
+    ]
+
+    const addEmployeeButton = document.querySelector("#addEmployeeButton")
+    const employeeList = document.querySelector("#employeeList")
+    const departmentFilter = document.querySelector("#departmentFilter")
+
+    function updateemployeeList(filteredEmployees) {
+      employeeList.innerHTML = ''
+
+      const ul = document.createElement('ul')
+      ul.className = 'list-group'
+
+      for (let i = 0; i < filteredEmployees.length; i++) {
+        const li = document.createElement('li')
+        li.className = 'list-group-item d-flex justify-content-between align-items-center'
+
+        const div = document.createElement('div')
+
+        const h5 = document.createElement('h5')
+        h5.textContent = filteredEmployees[i].name
+
+        const title = document.createElement('p')
+        title.textContent = filteredEmployees[i].title
+
+        const detailsLink = document.createElement('a')
+        detailsLink.href = `employeeDetails.html?id=${filteredEmployees[i].id}`
+        detailsLink.className = 'btn btn-link'
+        detailsLink.textContent = 'View Details'
+
+
+
+        div.appendChild(h5)
+        div.appendChild(title)
+
+
+        li.appendChild(div)
+        li.appendChild(detailsLink)
+
+
+        ul.appendChild(li);
+
+
+
+      }
+      employeeList.appendChild(ul)
+    }
+
+    addEmployeeButton.addEventListener("click", function () {
+      const employeeName = document.querySelector("#employeeName").value
+      const employeeTitle = document.querySelector("#employeeTitle").value
+      const employeeDepartment = document.querySelector("#employeeDepartment").value
+
+
+
+      if (employeeName && employeeTitle && employeeDepartment) {
+
+        const newemployeeId = employees.length + 1
+        const newemployee = {
+          id: newemployeeId,
+          name: employeeName,
+          title: employeeTitle
+        }
+
+        employees.push(newemployee);
+
+        updateemployeeList(employees)
+      }
+    })
+
+    departmentFilter.addEventListener("change", applyDepartmentFilter)
+    let filteredEmployees = []
+
+    function applyDepartmentFilter() {
+      const selectedDepartment = departmentFilter.value
+      filteredEmployees = []
+
+      if (selectedDepartment !== "allDepartments") {
+        for (let i = 0; i < employees.length; i++) {
+          if (employees[i].department === selectedDepartment) {
+            filteredEmployees.push(employees[i])
+          }
+        }
+      } else {
+        filteredEmployees = employees
+      }
+      updateemployeeList(filteredEmployees)
+    }
+
+    updateemployeeList(employees)
+
+
+
+  </script>
+</body>
+
+</html>
